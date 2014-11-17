@@ -5,7 +5,7 @@
   "main": "main.html",
   "window": {
     "width": 800,
-    "height": 750,
+    "height": 700,
     "title": "ixmaps-webkit",
     "toolbar": true
   }
