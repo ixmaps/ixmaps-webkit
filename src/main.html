@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>ixmaps reporter</title>
+    <style>
+      body {
+        width: 100%;
+      }
+      label {
+        float:left;
+        width:25%;
+        margin-right:0.5em;
+        padding-top:0.2em;
+        text-align:right;
+        font-weight:bold;
+      }
+
+      fieldset {
+        border:1px solid grey
+      }
+
+      legend {
+        padding: 0.2em 0.5em;
+        border:1px solid grey;
+        text-align:left;
+      }
+      h1 {
+        font-size: 100%;
+        font-weight: bold;
+      }
+
+      #dashboard {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+    <span id="dashboard"></span>
+    <h1><a href="http://ixmaps.ca">ixMaps</a></h1>
+  </div>
+    <fieldset>
+      <legend>Instance</legend>
+      <label for="server">Server</label>
+      <input id="server" type="text" value="http://localhost:8181" />
+      <br />
+      <label for="submitter">Submitter</label>
+      <input id="submitter" type="text" value="demo" />
+      <br />
+      <label for="postalcode">Postal code</label>
+      <input id="postalcode" value="M1M" size="6" />
+      <br />
+      <br />
+      <label for="command">Command</label><input id="command" value="traceroute" />
+      <br />
+      <label for="args">Args</label><input id="args" size="30" />
+      <br />
+      <button id="update">Update</button>
+    </fieldset>
+
+    <br />
+
+    <fieldset>
+      <legend>Trace</legend>
+      <label for="trhost">Host</label>
+      <input id="trhost" size="30" />
+      <button id="traceHost">Submit</button>
+      <br />
+      <br />
+      <select class="selectHost" style="width: 100%""><option value="">Select a host option</option><optgroup id="trset" label="TrSet"></optgroup><optgroup id="history" label="Recent history"></optgroup"></select>
+    </fieldset>
+
+    <div id="trsets" style="display: none">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="localchrome.js"></script>
+    <script src="traceLib.js"></script>
+    <script src="popup.js"></script>
+    <script src="index.js"></script>
+    <iframe style="width: 98%; height: 100%" src="http://localhost:8181"></iframe>
+  </body>
+</html>

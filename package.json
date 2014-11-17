@@ -1,0 +1,10 @@
+{
+  "name": "ixmaps-webkit",
+  "version": "0.0.5",
+  "description": "",
+  "dependencies": {
+    "ixmaps-chrome-extension": "^0.0.5",
+    "ixmaps-node-server": "^0.0.7",
+    "node-webkit-builder": "^0.3.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "ixmaps-webkit",
+  "version": "0.0.5",
+  "description": "",
+  "main": "main.html",
+  "window": {
+    "width": 800,
+    "height": 750,
+    "title": "m-cms edit",
+    "toolbar": true
+  }
+}
