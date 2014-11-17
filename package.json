@@ -4,7 +4,7 @@
   "description": "",
   "dependencies": {
     "ixmaps-chrome-extension": "^0.0.5",
-    "ixmaps-node-server": "^0.0.7",
+    "ixmaps-node-server": "^0.0.8",
     "node-webkit-builder": "^0.3.0"
   }
 }
