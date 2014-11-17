@@ -1,6 +1,6 @@
 // Uses nwbuild to create a webkit app
 
-/* jshint nodejs: true */
+/* jslint node: true */
 
 'use strict';
 
