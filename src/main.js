@@ -4,8 +4,40 @@
 
 var traceLib = window.traceLib;
 var requests = require('./lib/requests');
+
 var TRSETS_BASE = 'http://ixmaps.ca/trsets/';
+
+// currently processign items
+var processing = {};
+
 $(document).ready(function() {
+  // kick off the queue
+  requests.processQueue();
+
+  requests.setDebug(true);
+  // provide progress to running traces
+  requests.setTraceProgressCB(function(err, update) {
+    console.log('updating', update.traceID, processing);
+    processing[update.traceID] = update;
+    showDetails($('#viewport'));
+  });
+
+  requests.setTraceDoneCB(function(err, update) {
+    console.log('done, removing', update.traceID);
+    delete processing[update.traceID];
+    showDetails($('#viewport'));
+  });
+
+  function showDetails($vp) {
+    var t, d;
+    $vp.html('');
+    for (t in processing) {
+      var update = processing[t], now = update.now;
+      d = '\n' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds() + '\n' + Object.keys(update).map(function(k) { return k + ': ' + JSON.stringify(update[k]); }).join('\n');
+      $vp.append(d.replace(/\\n/g, '\n<br />'));
+      console.log('EEEE', d);
+    }
+  }
 
   // retrieve the ixmaps trsets and add them to the select
   $.get(TRSETS_BASE, function(data) {
@@ -64,7 +96,6 @@ $(document).ready(function() {
 
     requests.processRequests({requests: [data]}, function(err, res) {
        $('#viewport').append(new Date() + ' ' + res);
-       console.log('GOTres', err, res);
       requests.processIncoming(err, res);
     });
   });
