@@ -8,13 +8,32 @@ var requests = require('./lib/requests');
 var TRSETS_BASE = 'http://ixmaps.ca/trsets/';
 
 // currently processign items
-var processing = {};
+var processing = {}, freeze = false;
 
 $(document).ready(function() {
-  // kick off the queue
-  requests.processQueue();
+  $('#debug').click(function() {
+    if (this.checked) {
+      require('nw.gui').Window.get().showDevTools();
+      requests.setDebug(true);
+    } else {
+      requests.setDebug(false);
+    }
+  });
 
-  requests.setDebug(true);
+  $('#nparallel').change(function() {
+    requests.setParallel($(this).val());
+  });
+
+  $('#freeze').click(function() {
+    freeze = this.checked;
+    if (freeze) {
+      $('#viewport').addClass('frozen');
+    } else {
+      $('#viewport').removeClass('frozen');
+    }
+    showDetails($('#viewport'));
+  });
+
   // provide progress to running traces
   requests.setTraceProgressCB(function(err, update) {
     processing[update.traceID] = update;
@@ -28,12 +47,21 @@ $(document).ready(function() {
   });
 
   function showDetails($vp) {
+  var state = requests.getState();
+    $('#processing').html(Object.keys(state.processingHosts).length);
+    $('#queued').html(Object.keys(state.queuedHosts).length);
+    $('#processed').html(Object.keys(state.allHops).length);
+
+    if (freeze) {
+      return;
+    }
+
     var t, d;
     $vp.html('');
     for (t in processing) {
       var update = processing[t], now = update.now;
       d = '\n' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds() + '\n' + Object.keys(update).map(function(k) { return k + ': ' + JSON.stringify(update[k]); }).join('\n');
-      $vp.append(d.replace(/\\n/g, '\n<br />'));
+      $vp.append('<div class="debugItem">' + d.replace(/\\n/g, '\n<br />')+ '</div>');
     }
   }
 
@@ -52,7 +80,7 @@ $(document).ready(function() {
   });
 
   // Load initial settings
-  var data = defaultValues();
+  var data = formValues();
   console.log('default data', data);
   traceLib.init(data);
 
@@ -81,24 +109,28 @@ $(document).ready(function() {
 
   // Bind new settings
   $('#saveConfig').click(function() {
-    data = defaultValues();
+    data = formValues();
     traceLib.init(data);
     resetUI();
   });
 
   // Submit trset or URL
   $('#traceHost').click(function() {
-    var data = defaultValues();
+    var data = formValues();
     data.type = 'submitted';
     data.data = $('#trhost').val();
+    data.tag = $('#tag').val();
 
     requests.processRequests({requests: [data]}, requests.processIncoming);
   });
 
+  // kick off the queue
+  requests.processQueue();
+
 });
 
 // Return the default stored values
-function defaultValues() {
+function formValues() {
   var data = {};
   traceLib.stored.forEach(function(field) {
     data[field] = $('#' + field).val() || '';
