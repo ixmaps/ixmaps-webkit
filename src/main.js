@@ -17,7 +17,6 @@ $(document).ready(function() {
   requests.setDebug(true);
   // provide progress to running traces
   requests.setTraceProgressCB(function(err, update) {
-    console.log('updating', update.traceID, processing);
     processing[update.traceID] = update;
     showDetails($('#viewport'));
   });
@@ -35,7 +34,6 @@ $(document).ready(function() {
       var update = processing[t], now = update.now;
       d = '\n' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds() + '\n' + Object.keys(update).map(function(k) { return k + ': ' + JSON.stringify(update[k]); }).join('\n');
       $vp.append(d.replace(/\\n/g, '\n<br />'));
-      console.log('EEEE', d);
     }
   }
 
@@ -94,10 +92,7 @@ $(document).ready(function() {
     data.type = 'submitted';
     data.data = $('#trhost').val();
 
-    requests.processRequests({requests: [data]}, function(err, res) {
-       $('#viewport').append(new Date() + ' ' + res);
-      requests.processIncoming(err, res);
-    });
+    requests.processRequests({requests: [data]}, requests.processIncoming);
   });
 
 });
