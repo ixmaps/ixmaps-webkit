@@ -11,6 +11,17 @@ var TRSETS_BASE = 'http://ixmaps.ca/trsets/';
 var processing = {}, completed = {}, freeze = false;
 
 $(document).ready(function() {
+  // add copy/paste for MacOS
+  var gui = require('nw.gui');
+  var win = gui.Window.get();
+  var nativeMenuBar = new gui.Menu({ type: "menubar" });
+  try {
+    nativeMenuBar.createMacBuiltin("My App");
+    win.menu = nativeMenuBar;
+  } catch (ex) {
+    console.log(ex.message);
+  }
+
   $('#debug').click(function() {
     if (this.checked) {
       require('nw.gui').Window.get().showDevTools();
