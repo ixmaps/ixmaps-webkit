@@ -3,8 +3,8 @@
   "version": "0.0.5",
   "description": "",
   "dependencies": {
-    "ixmaps-chrome-extension": "^0.0.5",
-    "ixmaps-node-server": "^0.0.8",
+    "ixmaps-chrome-extension": "^0.0.7",
+    "ixmaps-node-server": "^0.0.9",
     "node-webkit-builder": "^0.3.0"
   }
 }
