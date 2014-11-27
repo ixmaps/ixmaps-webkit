@@ -8,7 +8,7 @@ var requests = require('./lib/requests');
 var TRSETS_BASE = 'http://ixmaps.ca/trsets/';
 
 // currently processign items
-var processing = {}, freeze = false;
+var processing = {}, completed = {}, freeze = false;
 
 $(document).ready(function() {
   $('#debug').click(function() {
@@ -34,6 +34,10 @@ $(document).ready(function() {
     showDetails($('#viewport'));
   });
 
+  $('.viewControl').change(function() {
+    showDetails($('#viewport'));
+  });
+
   // provide progress to running traces
   requests.setTraceProgressCB(function(err, update) {
     processing[update.traceID] = update;
@@ -41,13 +45,15 @@ $(document).ready(function() {
   });
 
   requests.setTraceDoneCB(function(err, update) {
-    console.log('done, removing', update.traceID);
-    delete processing[update.traceID];
+    var traceID = update.traceID;
+    console.log('done, removing', traceID);
+    completed[traceID] = processing[traceID];
+    delete processing[traceID];
     showDetails($('#viewport'));
   });
 
   function showDetails($vp) {
-  var state = requests.getState();
+    var state = requests.getState();
     $('#processing').html(Object.keys(state.processingHosts).length);
     $('#queued').html(Object.keys(state.queuedHosts).length);
     $('#processed').html(Object.keys(state.allHops).length);
@@ -56,13 +62,29 @@ $(document).ready(function() {
       return;
     }
 
-    var t, d;
-    $vp.html('');
-    for (t in processing) {
-      var update = processing[t], now = update.now;
-      d = '\n' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds() + '\n' + Object.keys(update).map(function(k) { return k + ': ' + JSON.stringify(update[k]); }).join('\n');
-      $vp.append('<div class="debugItem">' + d.replace(/\\n/g, '\n<br />')+ '</div>');
+    var toshow, t, table = '<table><tr>', tdata = '', c;
+    switch ($('#toView').val()) {
+      case 'processing':
+        toshow = processing;
+        break;
+      case 'completed':
+        toshow = completed;
+        break;
+      default:
+        toshow = $.extend({}, processing, completed);
     }
+
+    $vp.html('');
+    for (t in toshow) {
+      c = (processing[t] ? 'processing' : 'completed');
+      table += '<th class="' + c + '">' +  t + '</th>';
+      var update = toshow[t], now = update.now;
+      tdata += '<td class="' + c + '">' + (
+         $('#traceView').val() === 'details' ? (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "." + now.getMilliseconds() + '\n' + Object.keys(update).map(function(k) { return '<b>' + k + '</b>: ' + JSON.stringify(update[k]); }).join('\n')
+        : '<pre>' + update.buffer + '</pre>'
+      ) + '</td>';
+    }
+    $vp.append(table + '</tr><tr>' + tdata + '</tr></table>');
   }
 
   // retrieve the ixmaps trsets and add them to the select

@@ -1,10 +1,12 @@
 <html>
 <head>
+  <meta charset="utf-8">
   <title>IXmaps reporter</title>
   <style>
   body {
     width: 99%;
     background: #abc;
+    font-family:Arial, Helvetica, sans-serif;
   }
 
   label {
@@ -36,13 +38,25 @@
     font-weight: bold;
   }
 
-  .debugItem {
-    border: 1px dotted grey;
-    padding: 2px;
-  }
-
   .frozen {
     background: lightblue;
+  }
+
+  td {
+    vertical-align: top;
+    border-right: 1px dotted grey;
+  }
+
+  .processing {
+    background-color: lightblue;
+  }
+
+  .completed {
+    background:-color lightgrey;
+  }
+
+  pre {
+    font-size: 80%;
   }
 
   </style>
@@ -81,7 +95,6 @@
     </div>
     <span class="input"><label for="trhost">Host</label><input id="trhost" size="20" value="ixmaps.ca" /></span>
     <span style="float: right">
-      Processing: <span id="processing">0</span> Queued: <span id="queued">0</span> Processed: <span id="processed">0</span>
     </span>
     <div class="input"><label for="selectHost">TrSet</label><select class="selectHost"><option value="">Select a host option</option><optgroup id="trset" label="TrSet"></optgroup><optgroup id="history" label="Recent history"></optgroup></select></div>
   </fieldset>
@@ -89,7 +102,11 @@
   <br />
 
   <fieldset class="needsConfig" style="display: none">
-    <legend>View <select id="traceView"><option>Details</option><option>output</option><option>graph</option></select> <input type="checkbox" id="freeze" /><label for="freeze">Freeze</label></legend>
+    <legend>View
+      Processing: <span id="processing">0</span> Queued: <span id="queued">0</span> Processed: <span id="processed">0</span>
+      <select class="viewControl" id="toView"><option>everything</option><option>processing</option><option>completed</option></select>
+      <select class="viewControl" id="traceView"><option>output</option><option>details</option><option>graph</option></select>
+      <input type="checkbox" id="freeze" /><label for="freeze">Freeze</label></legend>
     <div id="viewport" style="width: 100%; height: 100%; overflow: auth">
     </div>
   </fieldset>
