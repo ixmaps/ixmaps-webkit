@@ -49,11 +49,11 @@
   }
 
   .processing {
-    background-color: lightblue;
+    background-color: lightgreen;
   }
 
   .completed {
-    background:-color lightgrey;
+    background-color: lightgrey;
   }
 
   pre {
@@ -62,26 +62,26 @@
 
   </style>
 </head>
-<body>
+<body><input id="server" type="hidden" value="http://localhost:8181" />
 <fieldset>
     <legend>Processor</legend>
     <div class="input" style="float: right; width: 47%">
-      <label for="command">Command</label><input id="command" value="traceroute" />
+      <label for="command">Command</label> <input id="command" value="traceroute" />
       <br />
-      <label for="args">Args</label><textarea id="args">-n -q 3</textarea><br />
+      <label for="args">Args</label> <textarea rows="1" id="args">-n -q 3</textarea><br />
     </div>
     <div class="input">
-      <label for="server">Server</label><input id="server" type="text" value="http://localhost:8181" />
-      <br />
       <label for="submitter">Submitter</label>
       <input id="submitter" type="text" value="demo" />
       <br />
       <label for="postalcode">Postal code</label>
       <input id="postalcode" value="M1M" size="6" />
     </div>
+    <br />
     <div style="text-align: center">
-      <label for="nparallel">Simultaneity</label><input id="nparallel" size="3" value="10" />
+      <label for="nparallel">Simultaneity</label> <input id="nparallel" size="3" value="10" />
       <input type="checkbox" id="debug" /> <label for="debug">Debug</label>
+      <input type="checkbox" id="doSubmit" /> <label for="doSubmit">Submit to IXmaps</label>
       <button id="saveConfig">Save</button>
     </div>
   </fieldset>
@@ -92,11 +92,9 @@
     <legend>Trace</legend>
     <div class="input" style="float: right; width: 47%">
       <label for="tag">Tag</label><input id="tag" size="7" />
-      <button id="traceHost">Submit</button><br />
+      <button id="traceHost">Run</button>
     </div>
     <span class="input"><label for="trhost">Host</label><input id="trhost" size="20" value="ixmaps.ca" /></span>
-    <span style="float: right">
-    </span>
     <div class="input"><label for="selectHost">TrSet</label><select class="selectHost"><option value="">Select a host option</option><optgroup id="trset" label="TrSet"></optgroup><optgroup id="history" label="Recent history"></optgroup></select></div>
   </fieldset>
 
